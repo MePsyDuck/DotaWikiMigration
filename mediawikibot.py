@@ -61,7 +61,7 @@ def process(dotawiki):
                 print('New Page Content:\n' + new_page_content)
                 print('Old Page Content:\n' + page.text())
 
-            page.edit(new_page_content, summary='Automated Category replacement (moving files to sound_vo categories)')
+            page.save(new_page_content, summary='Automated Category replacement (moving files to sound_vo categories)')
             if new_name.lower() != page.page_title.replace(' ', '_').lower():
                 page.move(new_name, reason='Automated move to VPK filepath structure')
             else:
