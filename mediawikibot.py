@@ -14,7 +14,7 @@ def main():
 def process(dotawiki):
     with open('sounds.txt') as file:
         for sound_entry in file:
-            split_sound_entry = sound_entry.split('/')
+            split_sound_entry = sound_entry.strip().split('/')
             vpk_root = split_sound_entry[0]
             root = split_sound_entry[1]
             header = split_sound_entry[2]
@@ -41,8 +41,8 @@ def process(dotawiki):
                                 line = split_line + '\n' + '[[Category:' + vpk_root + ' ' + root + ' '
                                 line += header.replace('_', ' ') + ']]'
                                 print('replacing ' + old_line + 'with ' + line)
-                        new_page_content += line
-                        new_page_content = new_page_content.strip()
+                        new_page_content += line + '\n'
+                    new_page_content = new_page_content.strip()
                     print('New Page Content:\n' + new_page_content)
                     print('Old Page Content:\n' + page.text())
 
