@@ -104,7 +104,6 @@ namespace SoundMove
                             StringBuilder newPageContentBuilder = new StringBuilder();
                             string line;
                             while ((line = reader.ReadLine()) != null)
-                            dd
                                 if (line.Length > 10)
                                 {
                                 Console.WriteLine("scanning " + line + " " + line.IndexOf("[[Category:"));
