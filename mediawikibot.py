@@ -1,4 +1,5 @@
 from mwclient import Site
+from ratelimit import limits, sleep_and_retry
 
 
 def main():
@@ -12,8 +13,7 @@ def main():
 
 
 def process(dotawiki):
-
-    start_hero = 'slardar'
+    start_hero = '/treant/'
     starting_found = False
     entries = []
 
@@ -60,15 +60,20 @@ def process(dotawiki):
                 new_page_content = new_page_content.strip()
                 print('New Page Content:\n' + new_page_content)
                 print('Old Page Content:\n' + page.text())
-
-            page.save(new_page_content, summary='Automated Category replacement (moving files to sound_vo categories)')
-            if new_name.lower() != page.page_title.replace(' ', '_').lower():
-                page.move(new_name, reason='Automated move to VPK filepath structure')
-            else:
-                print('File already processed: ' + new_name)
+            update_page(page, new_page_content, new_name)
         else:
             print('Page ' + 'File:' + file_name + ' does not exist.')
     print('All operations completed')
+
+
+@sleep_and_retry
+@limits(calls=10, period=60)
+async def update_page(page, new_page_content, new_name):
+    page.save(new_page_content, summary='Automated Category replacement (moving files to sound_vo categories)')
+    if new_name.lower() != page.page_title.replace(' ', '_').lower():
+        await page.move(new_name, reason='Automated move to VPK filepath structure')
+    else:
+        print('File already processed: ' + new_name)
 
 
 if __name__ == '__main__':
